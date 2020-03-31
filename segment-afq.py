@@ -26,9 +26,9 @@ import scipy.io as sio
 from matplotlib import cm
 
 # make output directories
-os.mkdir("wmc")
-os.mkdir("wmc/tracts")
-os.mkdir("wmc/surfaces")
+#os.mkdir("wmc")
+#os.mkdir("wmc/tracts")
+#os.mkdir("wmc/surfaces")
 
 # open configurable inputs
 with open('config.json') as config_f:
