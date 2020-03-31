@@ -64,27 +64,27 @@ tractsfile = []
 
 for bnames in range(np.size(bundle_names)):
 	tract_ind = np.array(segmentation.fiber_groups['%s' % bundle_names[bnames]]['idx'])
-        streamline_index[tract_ind] = bnames + 1
-        streamlines = np.zeros([len(tg.streamlines[tract_ind])],dtype=object)
-        for e in range(len(streamlines)):
-            streamlines[e] = np.transpose(tg.streamlines[tract_ind][e]).round(2)
+    streamline_index[tract_ind] = bnames + 1
+    streamlines = np.zeros([len(tg.streamlines[tract_ind])],dtype=object)
+    for e in range(len(streamlines)):
+        streamlines[e] = np.transpose(tg.streamlines[tract_ind][e]).round(2)
 
-        color=list(cm.nipy_spectral(bnames))[0:3]
-        count = len(streamlines)
-        print("sub-sampling for json")
-        if count < 1000:
-            max = count
-        else:
-            max = 1000
-        jsonfibers = np.reshape(streamlines[:max], [max,1]).tolist()
-        for i in range(max):
-            jsonfibers[i] = [jsonfibers[i][0].tolist()]
+    color=list(cm.nipy_spectral(bnames))[0:3]
+    count = len(streamlines)
+    print("sub-sampling for json")
+    if count < 1000:
+        max = count
+    else:
+        max = 1000
+    jsonfibers = np.reshape(streamlines[:max], [max,1]).tolist()
+    for i in range(max):
+        jsonfibers[i] = [jsonfibers[i][0].tolist()]
 
-        with open ('wmc/tracts/'+str(bnames+1)+'.json', 'w') as outfile:
-            jsonfile = {'name': names[bnames], 'color': color, 'coords': jsonfibers}
-            json.dump(jsonfile, outfile)
-        
-        tractsfile.append({"name": names[bnames], "color": color, "filename": str(bnames+1)+'.json'})
+    with open ('wmc/tracts/'+str(bnames+1)+'.json', 'w') as outfile:
+        jsonfile = {'name': names[bnames], 'color': color, 'coords': jsonfibers}
+        json.dump(jsonfile, outfile)
+    
+    tractsfile.append({"name": names[bnames], "color": color, "filename": str(bnames+1)+'.json'})
 
 with open ('wmc/tracts/tracts.json', 'w') as outfile:
     json.dump(tractsfile, outfile, separators=(',', ': '), indent=4)
