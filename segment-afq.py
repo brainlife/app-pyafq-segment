@@ -63,7 +63,7 @@ streamline_index = np.zeroes(len(tg.streamlines))
 tractsfile = []
 
 for bnames in range(np.size(bundle_names)):
-	tract_ind = np.array(segmentation.fiber_groups['%s' % bundle_names[bnames]]['idx'])
+    tract_ind = np.array(segmentation.fiber_groups['%s' % bundle_names[bnames]]['idx'])
     streamline_index[tract_ind] = bnames + 1
     streamlines = np.zeros([len(tg.streamlines[tract_ind])],dtype=object)
     for e in range(len(streamlines)):
@@ -83,7 +83,7 @@ for bnames in range(np.size(bundle_names)):
     with open ('wmc/tracts/'+str(bnames+1)+'.json', 'w') as outfile:
         jsonfile = {'name': names[bnames], 'color': color, 'coords': jsonfibers}
         json.dump(jsonfile, outfile)
-    
+
     tractsfile.append({"name": names[bnames], "color": color, "filename": str(bnames+1)+'.json'})
 
 with open ('wmc/tracts/tracts.json', 'w') as outfile:
