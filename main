@@ -1,0 +1,29 @@
+#!/bin/bash
+#PBS -l nodes=1:ppn=8,vmem=64gb,walltime=6:00:00
+#PBS -N app-pyAFQ-segment
+
+
+# convert aparc+aseg to nifti
+[ -z "$FREESURFER_LICENSE" ] && echo "Please set FREESURFER_LICENSE in .bashrc" && exit 1;
+echo $FREESURFER_LICENSE > license.txt
+
+if [ ! -f aparc+aseg.nii.gz ]; then
+    echo "converting aparc.a2009+aseg file to nifti"
+    time singularity exec -e -B `pwd`/license.txt:/usr/local/freesurfer/license.txt \
+        docker://brainlife/freesurfer_on_mcr:6.0.2 ./convertaseg.sh
+fi
+
+# run AFQ segmentation
+SINGULARITYENV_PYTHONNOUSERSITE=true time singularity exec -e docker://brainlife/pyafq:dev ./segment-afq.py
+
+# create surfaces for visualizer
+echo "Generating surfaces/ vtk from aparc+aseg.mgz"
+time singularity exec -e docker://brainlife/pythonvtk:1.1 ./freesurfer2vtks.py
+
+if [ -f classification.mat ]; then
+	echo "complete"
+	exit 0
+else
+	echo "failed"
+	exit 1
+fi

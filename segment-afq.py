@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import os.path as op
+import os.path as os
 import matplotlib.pyplot as plt
 import numpy as np
 import nibabel as nib
@@ -21,21 +21,14 @@ import AFQ.registration as reg
 import AFQ.dti as dti
 import AFQ.segmentation as seg
 from AFQ.utils.volume import patch_up_roi
-import array as ar
+import dipy.core.gradients as dpg
+import scipy.io as sio
+from matplotlib import cm
 
-
-def ismember(a_vec, b_vec):
-    """ MATLAB equivalent ismember function """
-
-    bool_ind = np.isin(a_vec,b_vec)
-    common = a_vec[bool_ind]
-    common_unique, common_inv  = np.unique(common, return_inverse=True)     # common = common_unique[common_inv]
-    b_unique, b_ind = np.unique(b_vec, return_index=True)  # b_unique = b_vec[b_ind]
-    common_ind = b_ind[np.isin(b_unique, common_unique, assume_unique=True)]
-    
-    return bool_ind, common_ind[common_inv
-
-
+# make output directories
+os.mkdir("wmc")
+os.mkdir("wmc/tracts")
+os.mkdir("wmc/surfaces")
 
 # open configurable inputs
 with open('config.json') as config_f:
@@ -54,7 +47,7 @@ MNI_T2_img = dpd.read_mni_template()
 warped_hardi, mapping = reg.syn_register_dwi(dwi, gtab)
 
 # load tractogram
-tg = load_tractogram(track,img)
+tg = load_tractogram(track,dwi_img)
 
 # download and load waypoint ROIs and make bundle dictionary
 bundles = api.make_bundle_dict(resample_to=MNI_T2_img)
@@ -62,20 +55,42 @@ bundle_names = list(bundles.keys())
 
 # initialize segmentation and segment major fiber groups
 segmentation = seg.Segmentation(return_idx=True)
-segmentation.segment_afq(bundles,tg,fdata=dwi,fbval=bvals,fbvec=bvecs,mapping=mapping,reg_template=MNI_T2_img)
+segmentation.segment(bundles,tg,fdata=dwi,fbval=bvals,fbvec=bvecs,mapping=mapping,reg_template=MNI_T2_img)
 
-# save output
-classification = {}
-classification['names'] = []
-classification['index'] = []
+# generate classification structure and tracts.json
+names = np.array(bundle_names,dtype=object)
+streamline_index = np.zeroes(len(tg.streamlines))
+tractsfile = []
 
-streamline_index = ar.array('i',np.range(tg.streamlines)) # generate indices integer array of N streamlines x 1
+for bnames in range(np.size(bundle_names)):
+	tract_ind = np.array(segmentation.fiber_groups['%s' % bundle_names[bnames]]['idx'])
+        streamline_index[tract_ind] = bnames + 1
+        streamlines = np.zeros([len(tg.streamlines[tract_ind])],dtype=object)
+        for e in range(len(streamlines)):
+            streamlines[e] = np.transpose(tg.streamlines[tract_ind][e]).round(2)
 
-for names in range(np.size(bundle_names)):
-	classification['names'] = np.append(classification['names'],bundle_names[names]).tolist()  	
-	bool_ind = ismember(np.array(streamline_index),np.array(segmentation.fiber_groups['%s' % names]['idx']))
-	classification['index'] = np.append(classification['index'],bool_ind[0])
+        color=list(cm.nipy_spectral(bnames))[0:3]
+        count = len(streamlines)
+        print("sub-sampling for json")
+        if count < 1000:
+            max = count
+        else:
+            max = 1000
+        jsonfibers = np.reshape(streamlines[:max], [max,1]).tolist()
+        for i in range(max):
+            jsonfibers[i] = [jsonfibers[i][0].tolist()]
 
+        with open ('wmc/tracts/'+str(bnames+1)+'.json', 'w') as outfile:
+            jsonfile = {'name': names[bnames], 'color': color, 'coords': jsonfibers}
+            json.dump(jsonfile, outfile)
+        
+        tractsfile.append({"name": names[bnames], "color": color, "filename": str(bnames+1)+'.json'})
 
+with open ('wmc/tracts/tracts.json', 'w') as outfile:
+    json.dump(tractsfile, outfile, separators=(',', ': '), indent=4)
 
+# save classification structure
+print("saving classification.mat")
+sio.savemat('wmc/classification.mat', { "classification": {"names": names, "index": streamline_index }})
 
+print("AFQ segmentation complete")
