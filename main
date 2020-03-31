@@ -15,13 +15,17 @@ if [ ! -f aparc+aseg.nii.gz ]; then
 fi
 
 # run AFQ segmentation
-SINGULARITYENV_PYTHONNOUSERSITE=true time singularity exec -e docker://brainlife/pyafq:dev ./segment-afq.py
+if [ ! -f ./wmc/classification.mat ]; then
+	SINGULARITYENV_PYTHONNOUSERSITE=true time singularity exec -e docker://brainlife/pyafq:dev ./segment-afq.py
+fi
 
 # create surfaces for visualizer
-echo "Generating surfaces/ vtk from aparc+aseg.mgz"
-time singularity exec -e docker://brainlife/pythonvtk:1.1 ./freesurfer2vtks.py
+if [ ! -f ./wmc/surfaces/index.json ]; then
+	echo "Generating surfaces/ vtk from aparc+aseg.mgz"
+	time singularity exec -e docker://brainlife/pythonvtk:1.1 ./freesurfer2vtks.py
+fi
 
-if [ -f classification.mat ]; then
+if [ -f ./wmc/classification.mat ]; then
 	echo "complete"
 	exit 0
 else
