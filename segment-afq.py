@@ -59,7 +59,7 @@ segmentation.segment(bundles,tg,fdata=dwi,fbval=bvals,fbvec=bvecs,mapping=mappin
 
 # generate classification structure and tracts.json
 names = np.array(bundle_names,dtype=object)
-streamline_index = np.zeroes(len(tg.streamlines))
+streamline_index = np.zeros(len(tg.streamlines))
 tractsfile = []
 
 for bnames in range(np.size(bundle_names)):
