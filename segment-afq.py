@@ -48,7 +48,8 @@ warped_hardi, mapping = reg.syn_register_dwi(dwi, gtab)
 
 # load tractogram
 tg = load_tractogram(track,dwi_img)
-tg_acpc = tg.to_rasmm()
+tg_acpc = tg
+tg_acpc.to_rasmm()
 
 # download and load waypoint ROIs and make bundle dictionary
 bundles = api.make_bundle_dict(resample_to=MNI_T2_img)
