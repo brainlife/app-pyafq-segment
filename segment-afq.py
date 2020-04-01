@@ -48,6 +48,7 @@ warped_hardi, mapping = reg.syn_register_dwi(dwi, gtab)
 
 # load tractogram
 tg = load_tractogram(track,dwi_img)
+tg_acpc = tg.torasmm()
 
 # download and load waypoint ROIs and make bundle dictionary
 bundles = api.make_bundle_dict(resample_to=MNI_T2_img)
@@ -65,9 +66,9 @@ tractsfile = []
 for bnames in range(np.size(bundle_names)):
     tract_ind = np.array(segmentation.fiber_groups['%s' % bundle_names[bnames]]['idx'])
     streamline_index[tract_ind] = bnames + 1
-    streamlines = np.zeros([len(tg.streamlines[tract_ind])],dtype=object)
+    streamlines = np.zeros([len(tg_acpc.streamlines[tract_ind])],dtype=object)
     for e in range(len(streamlines)):
-        streamlines[e] = np.transpose(tg.streamlines[tract_ind][e]).round(2)
+        streamlines[e] = np.transpose(tg_acpc.streamlines[tract_ind][e]).round(2)
 
     color=list(cm.nipy_spectral(bnames))[0:3]
     count = len(streamlines)
