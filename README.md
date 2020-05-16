@@ -1,5 +1,5 @@
 [![Abcdspec-compliant](https://img.shields.io/badge/ABCD_Spec-v1.1-green.svg)](https://github.com/brain-life/abcd-spec)
-[![Run on Brainlife.io](https://img.shields.io/badge/Brainlife-brainlife.app.295-blue.svg)](10.25663/brainlife.app.295)
+[![Run on Brainlife.io](https://img.shields.io/badge/Brainlife-brainlife.app.295-blue.svg)](https://doi.org/10.25663/brainlife.app.295)
 
 # AFQ Segmentation: pyAFQ 
 
