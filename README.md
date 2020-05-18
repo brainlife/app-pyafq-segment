@@ -34,7 +34,7 @@ Please cite the following articles when publishing papers that used data, code o
 
 ### On Brainlife.io 
 
-You can submit this App online at [10.25663/brainlife.app.295](10.25663/brainlife.app.295) via the 'Execute' tab. 
+You can submit this App online at [https://doi.org/10.25663/brainlife.app.295](https://doi.org/10.25663/brainlife.app.295) via the 'Execute' tab. 
 
 ### Running Locally (on your machine) 
 
@@ -44,11 +44,11 @@ You can submit this App online at [10.25663/brainlife.app.295](10.25663/brainlif
 
 ```json 
 {
-    'track':    'testdata/track/track.tck',
-    'freesurfer':    'test/data/freesurfer/output',
-    'dwi':    'testdata/dwi/dwi.nii.gz',
-    'bvals':    'testdata/dwi/dwi.bvals',
-    'bvecs':    'testdata/dwi/dwi.bvecs'
+    "track":    "testdata/track/track.tck",
+    "freesurfer":    "test/data/freesurfer/output",
+    "dwi":    "testdata/dwi/dwi.nii.gz",
+    "bvals":    "testdata/dwi/dwi.bvals",
+    "bvecs":    "testdata/dwi/dwi.bvecs"
 } 
 ``` 
 
