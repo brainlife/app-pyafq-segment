@@ -12,6 +12,7 @@ from dipy.io.streamline import save_tractogram, load_tractogram
 from dipy.stats.analysis import afq_profile, gaussian_weights
 from dipy.io.stateful_tractogram import StatefulTractogram
 from dipy.io.stateful_tractogram import Space
+from dipy.io.vtk import transform_streamlines
 import json
 from AFQ import api
 import AFQ.utils.streamlines as aus
@@ -48,8 +49,7 @@ warped_hardi, mapping = reg.syn_register_dwi(dwi, gtab)
 
 # load tractogram
 tg = load_tractogram(track,dwi_img)
-tg_acpc = tg
-tg_acpc.to_rasmm()
+tg_acpc = transform_streamlines(tg.streamlines,dwi_img.get_affine())
 
 # download and load waypoint ROIs and make bundle dictionary
 bundles = api.make_bundle_dict(resample_to=MNI_T2_img)
@@ -67,9 +67,9 @@ tractsfile = []
 for bnames in range(np.size(bundle_names)):
     tract_ind = np.array(segmentation.fiber_groups['%s' % bundle_names[bnames]]['idx'])
     streamline_index[tract_ind] = bnames + 1
-    streamlines = np.zeros([len(tg_acpc.streamlines[tract_ind])],dtype=object)
+    streamlines = np.zeros([len(tg_acpc[tract_ind])],dtype=object)
     for e in range(len(streamlines)):
-        streamlines[e] = np.transpose(tg_acpc.streamlines[tract_ind][e]).round(2)
+        streamlines[e] = np.transpose(tg_acpc[tract_ind][e]).round(2)
 
     color=list(cm.nipy_spectral(bnames))[0:3]
     count = len(streamlines)
