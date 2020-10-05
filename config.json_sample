@@ -1,7 +1,7 @@
 {
-	"dwi":	"test/pyafq/data/dwi/dwi.nii.gz",
-	"bvals":	"test/pyafq/data/dwi/dwi.bvals",
-	"bvecs":	"test/pyafq/data/dwi/dwi.bvecs",
-	"track":	"test/pyafq/data/track/track.tck",
-	"freesurfer":	"test/pyafq/data/freesurfer/output/"
+    "dwi": "testdata/dwi/dwi.nii.gz",
+    "bvals": "testdata/dwi/dwi.bvals",
+    "bvecs": "testdata/dwi/dwi.bvecs",
+    "track": "testdata/track/track.tck",
+    "freesurfer": "testdata/freesurfer/output/"
 }

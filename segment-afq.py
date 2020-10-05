@@ -24,6 +24,7 @@ from AFQ.utils.volume import patch_up_roi
 import dipy.core.gradients as dpg
 import scipy.io as sio
 from matplotlib import cm
+import itertools
 
 # make output directories
 #os.mkdir("wmc")
@@ -47,15 +48,19 @@ MNI_T2_img = dpd.read_mni_template()
 warped_hardi, mapping = reg.syn_register_dwi(dwi, gtab)
 
 # load tractogram
-tg = load_tractogram(track,dwi_img)
-tg_acpc = tg
-tg_acpc.to_rasmm()
+tg = load_tractogram(track,dwi_img,to_space=Space.RASMM)
+tg_sample = list(itertools.islice(tg.streamlines, 500))
+
+#tg_acpc = tg
+#tg_acpc.to_rasmm()
+#print(tg)
 
 # download and load waypoint ROIs and make bundle dictionary
 bundles = api.make_bundle_dict(resample_to=MNI_T2_img)
 bundle_names = list(bundles.keys())
 
 # initialize segmentation and segment major fiber groups
+print("running AFQ segmentation")
 segmentation = seg.Segmentation(return_idx=True)
 segmentation.segment(bundles,tg,fdata=dwi,fbval=bvals,fbvec=bvecs,mapping=mapping,reg_template=MNI_T2_img)
 
