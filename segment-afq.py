@@ -55,9 +55,17 @@ tg = load_tractogram(track,dwi_img)
 bundles = api.make_bundle_dict(resample_to=MNI_T2_img)
 bundle_names = list(bundles.keys())
 
+print(f"Space before segmentation: {tg.space}")
+
 # initialize segmentation and segment major fiber groups
+print("running AFQ segmentation")
 segmentation = seg.Segmentation(return_idx=True)
 segmentation.segment(bundles,tg,fdata=dwi,fbval=bvals,fbvec=bvecs,mapping=mapping,reg_template=MNI_T2_img)
+
+print(f"Space after segmentation: {tg.space}")
+
+# re-load tractogram in RASMM space since it was warped to the VOX space during segmentation
+tg = load_tractogram(track,dwi_img)
 
 # generate classification structure and tracts.json
 names = np.array(bundle_names,dtype=object)
