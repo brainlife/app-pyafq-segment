@@ -58,6 +58,7 @@ bundle_names = list(bundles.keys())
 print(f"Space before segmentation: {tg.space}")
 
 # initialize segmentation and segment major fiber groups
+print("running AFQ segmentation")
 segmentation = seg.Segmentation(return_idx=True)
 segmentation.segment(bundles,tg,fdata=dwi,fbval=bvals,fbvec=bvecs,mapping=mapping,reg_template=MNI_T2_img)
 
