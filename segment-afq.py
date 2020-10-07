@@ -12,6 +12,7 @@ from dipy.io.streamline import save_tractogram, load_tractogram
 from dipy.stats.analysis import afq_profile, gaussian_weights
 from dipy.io.stateful_tractogram import StatefulTractogram
 from dipy.io.stateful_tractogram import Space
+from dipy.io.vtk import transform_streamlines
 import json
 from AFQ import api
 import AFQ.utils.streamlines as aus
@@ -24,7 +25,6 @@ from AFQ.utils.volume import patch_up_roi
 import dipy.core.gradients as dpg
 import scipy.io as sio
 from matplotlib import cm
-import itertools
 
 # make output directories
 #os.mkdir("wmc")
@@ -48,21 +48,23 @@ MNI_T2_img = dpd.read_mni_template()
 warped_hardi, mapping = reg.syn_register_dwi(dwi, gtab)
 
 # load tractogram
-tg = load_tractogram(track,dwi_img,to_space=Space.RASMM)
-tg_sample = list(itertools.islice(tg.streamlines, 500))
-
-#tg_acpc = tg
-#tg_acpc.to_rasmm()
-#print(tg)
+tg = load_tractogram(track,dwi_img)
+#tg_acpc = transform_streamlines(tg.streamlines,dwi_img.get_affine())
 
 # download and load waypoint ROIs and make bundle dictionary
 bundles = api.make_bundle_dict(resample_to=MNI_T2_img)
 bundle_names = list(bundles.keys())
 
+print(f"Space before segmentation: {tg.space}")
+
 # initialize segmentation and segment major fiber groups
-print("running AFQ segmentation")
 segmentation = seg.Segmentation(return_idx=True)
 segmentation.segment(bundles,tg,fdata=dwi,fbval=bvals,fbvec=bvecs,mapping=mapping,reg_template=MNI_T2_img)
+
+print(f"Space after segmentation: {tg.space}")
+
+# re-load tractogram in RASMM space since it was warped to the VOX space during segmentation
+tg = load_tractogram(track,dwi_img)
 
 # generate classification structure and tracts.json
 names = np.array(bundle_names,dtype=object)
@@ -72,9 +74,9 @@ tractsfile = []
 for bnames in range(np.size(bundle_names)):
     tract_ind = np.array(segmentation.fiber_groups['%s' % bundle_names[bnames]]['idx'])
     streamline_index[tract_ind] = bnames + 1
-    streamlines = np.zeros([len(tg_acpc.streamlines[tract_ind])],dtype=object)
+    streamlines = np.zeros([len(tg.streamlines[tract_ind])],dtype=object)
     for e in range(len(streamlines)):
-        streamlines[e] = np.transpose(tg_acpc.streamlines[tract_ind][e]).round(2)
+        streamlines[e] = np.transpose(tg.streamlines[tract_ind][e]).round(2)
 
     color=list(cm.nipy_spectral(bnames))[0:3]
     count = len(streamlines)
