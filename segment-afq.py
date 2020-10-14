@@ -1,29 +1,15 @@
 #!/usr/bin/env python3
 
 import os.path as os
-import matplotlib.pyplot as plt
+import json
 import numpy as np
 import nibabel as nib
 import dipy.data as dpd
-from dipy.data import fetcher
-import dipy.tracking.utils as dtu
-import dipy.tracking.streamline as dts
-from dipy.io.streamline import save_tractogram, load_tractogram
-from dipy.stats.analysis import afq_profile, gaussian_weights
-from dipy.io.stateful_tractogram import StatefulTractogram
-from dipy.io.stateful_tractogram import Space
-from dipy.io.vtk import transform_streamlines
-import json
+from dipy.io.streamline import load_tractogram
 from AFQ import api
-import AFQ.utils.streamlines as aus
-import AFQ.data as afd
-import AFQ.tractography as aft
 import AFQ.registration as reg
-import AFQ.dti as dti
 import AFQ.segmentation as seg
-from AFQ.utils.volume import patch_up_roi
 import dipy.core.gradients as dpg
-import scipy.io as sio
 from matplotlib import cm
 
 # make output directories
@@ -49,7 +35,6 @@ warped_hardi, mapping = reg.syn_register_dwi(dwi, gtab)
 
 # load tractogram
 tg = load_tractogram(track,dwi_img)
-#tg_acpc = transform_streamlines(tg.streamlines,dwi_img.get_affine())
 
 # download and load waypoint ROIs and make bundle dictionary
 bundles = api.make_bundle_dict(resample_to=MNI_T2_img)
