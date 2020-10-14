@@ -16,7 +16,7 @@ fi
 
 # run AFQ segmentation
 if [ ! -f ./wmc/classification.mat ]; then
-	time singularity exec -e docker://brainlife/pyafq:0.4.1 ./segment-afq.py
+	time singularity exec -e docker://brainlife/pyafq:dev ./segment-afq.py
 fi
 
 # create surfaces for visualizer
