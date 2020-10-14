@@ -5,7 +5,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get -y install sudo python3.6 python3-pip jq time git curl unzip
 
 #RUN pip3 install git+git://github.com/yeatmanlab/pyAFQ.git@master#egg=pyAFQ
-RUN pip3 install pyAFQ
+RUN pip3 install packages pyAFQ
 
 #make it work under singularity
 RUN ldconfig && mkdir -p /N/u /N/home /N/dc2 /N/soft /mnt/scratch /share1
