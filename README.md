@@ -81,11 +81,11 @@ The secondary output of this app is `product.json`. This file allows web interfa
 
 This App requires the following libraries when run locally. 
 
-- Python3: 
-- matplotlib: 
-- numpy: 
-- dipy: 
-- json: 
-- pyAFQ: 
-- singularity: 
-- scipy: 
+- Python3: https://www.python.org/download/releases/3.0/
+- matplotlib: https://matplotlib.org/users/installing.html
+- numpy: https://numpy.org/install/
+- dipy: https://dipy.org/documentation/1.2.0./installation/
+- json: https://pypi.org/project/jsonlib-python3/
+- pyAFQ: https://yeatmanlab.github.io/pyAFQ/installation_guide.html
+- singularity: https://singularity.lbl.gov/quickstart
+- scipy: https://www.scipy.org/install.html
