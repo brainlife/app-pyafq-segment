@@ -30,7 +30,8 @@ dwi_img = nib.load(dwi)
 gtab = dpg.gradient_table(bvals,bvecs,b0_threshold=50)
 
 # load MNI template and syn register dwi data to MNI
-MNI_T2_img = dpd.read_mni_template()
+#MNI_T2_img = dpd.read_mni_template()
+MNI_T2_img = nib.load('/templateflow/tpl-MNI152NLin2009cAsym/tpl-MNI152NLin2009cAsym_res-01_T2w.nii.gz')
 warped_hardi, mapping = reg.syn_register_dwi(dwi, gtab)
 
 # load tractogram
