@@ -35,7 +35,7 @@ MNI_T2_img = nib.load('/templateflow/tpl-MNI152NLin2009cAsym/tpl-MNI152NLin2009c
 warped_hardi, mapping = reg.syn_register_dwi(dwi, gtab)
 
 # load tractogram
-tg = load_tractogram(track,dwi_img,bbox_val_check=False)
+tg = load_tractogram(track,dwi_img,bbox_valid_check=False)
 #tg_acpc = transform_streamlines(tg.streamlines,dwi_img.get_affine())
 
 # download and load waypoint ROIs and make bundle dictionary
