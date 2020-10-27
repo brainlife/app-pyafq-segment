@@ -10,6 +10,7 @@ from AFQ import api
 import AFQ.registration as reg
 import AFQ.segmentation as seg
 import dipy.core.gradients as dpg
+import scipy.io as sio
 from matplotlib import cm
 
 # make output directories
