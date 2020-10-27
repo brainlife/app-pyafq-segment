@@ -36,18 +36,17 @@ MNI_T2_img = nib.load('/templateflow/tpl-MNI152NLin2009cAsym/tpl-MNI152NLin2009c
 
 # run affine registration if requested
 if affine == True:
-    
     # create mean b0 image
     b0 = np.mean(dwi_img.get_fdata()[..., gtab.b0s_mask], -1)
     
     # register DWI to MNI using affine
-    affine_hardi, prealign = reg.affine_registration(b0,MNI_T2_img.get_fdata(),dwi_img.affine,MNI_T2_img.affine)
+    _, prealign = reg.affine_registration(b0,MNI_T2_img.get_fdata(),dwi_img.affine,MNI_T2_img.affine)
 
-# run nonlinear (SyN) registration
-if affine == "":
-    warped_hardi, mapping = reg.syn_register_dwi(dwi, gtab)
-else:
+    # register DWI to MNI using nonlinear registration
     warped_hardi, mapping = reg.syn_register_dwi(dwi, gtab, prealign=prealign)
+else:
+    # register DWI to MNI using nonlinear registration
+    warped_hardi, mapping = reg.syn_register_dwi(dwi, gtab)
 
 # load tractogram
 tg = load_tractogram(track,dwi_img,bbox_valid_check=False)
