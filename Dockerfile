@@ -18,7 +18,8 @@ RUN python3 -c "from templateflow import api as tfapi; \
                          desc=None, extension=['.nii', '.nii.gz']); \
                tfapi.get('MNI152NLin6Asym', atlas=None, resolution=[1, 2], \
                          desc='brain', extension=['.nii', '.nii.gz']); \
-               tfapi.get('MNI152NLin2009cAsym', atlas=None, extension=['.nii', '.nii.gz']); \
+               tfapi.get('MNI152NLin2009cAsym', suffix='T2w', resolution=[1,2], desc=None); \
+               tfapi.get('MNI152NLin2009cAsym', suffix='mask', resolution=[1,2], desc='brain'); \
                tfapi.get('OASIS30ANTs', extension=['.nii', '.nii.gz']); \
                tfapi.get('fsaverage', density='164k', desc='std', suffix='sphere'); \
                tfapi.get('fsaverage', density='164k', desc='vaavg', suffix='midthickness'); \
@@ -33,4 +34,3 @@ ENV PYTHONNOUSERSITE=true
 RUN apt-get install -y locales
 RUN echo "LC_ALL=en_US.UTF-8" >> /etc/environment && echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen && echo "LANG=en_US.UTF-8" > /etc/locale.conf && locale-gen en_US.UTF-8
 ENV LC_CTYPE="en_US.UTF-8"
-
