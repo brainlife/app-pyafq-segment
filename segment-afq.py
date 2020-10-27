@@ -35,13 +35,13 @@ gtab = dpg.gradient_table(bvals,bvecs,b0_threshold=50)
 MNI_T2_img = nib.load('/templateflow/tpl-MNI152NLin2009cAsym/tpl-MNI152NLin2009cAsym_res-01_T2w.nii.gz')
 
 # run affine registration if requested
-if affine == 'true':
+if affine == True:
     
     # create mean b0 image
     b0 = np.mean(dwi_img.get_fdata()[..., gtab.b0s_mask], -1)
     
     # register DWI to MNI using affine
-    , prealign = reg.affine_registration(b0,MNI_T2_img.get_fdata(),dwi_img.affine,MNI_T2_img.affine)
+    affine_hardi, prealign = reg.affine_registration(b0,MNI_T2_img.get_fdata(),dwi_img.affine,MNI_T2_img.affine)
 
 # run nonlinear (SyN) registration
 if affine == "":
