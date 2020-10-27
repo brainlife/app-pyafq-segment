@@ -33,3 +33,4 @@ ENV PYTHONNOUSERSITE=true
 RUN apt-get install -y locales
 RUN echo "LC_ALL=en_US.UTF-8" >> /etc/environment && echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen && echo "LANG=en_US.UTF-8" > /etc/locale.conf && locale-gen en_US.UTF-8
 ENV LC_CTYPE="en_US.UTF-8"
+
