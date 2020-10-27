@@ -52,7 +52,7 @@ segmentation.segment(bundles,tg,fdata=dwi,fbval=bvals,fbvec=bvecs,mapping=mappin
 print(f"Space after segmentation: {tg.space}")
 
 # re-load tractogram in RASMM space since it was warped to the VOX space during segmentation
-tg = load_tractogram(track,dwi_img)
+tg = load_tractogram(track,dwi_img,bbox_valid_check=False)
 
 # generate classification structure and tracts.json
 names = np.array(bundle_names,dtype=object)
