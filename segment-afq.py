@@ -10,6 +10,7 @@ from AFQ import api
 import AFQ.registration as reg
 import AFQ.segmentation as seg
 import dipy.core.gradients as dpg
+import scipy.io as sio
 from matplotlib import cm
 
 # make output directories
@@ -30,11 +31,13 @@ dwi_img = nib.load(dwi)
 gtab = dpg.gradient_table(bvals,bvecs,b0_threshold=50)
 
 # load MNI template and syn register dwi data to MNI
-MNI_T2_img = dpd.read_mni_template()
+#MNI_T2_img = dpd.read_mni_template()
+MNI_T2_img = nib.load('/templateflow/tpl-MNI152NLin2009cAsym/tpl-MNI152NLin2009cAsym_res-01_T2w.nii.gz')
 warped_hardi, mapping = reg.syn_register_dwi(dwi, gtab)
 
 # load tractogram
-tg = load_tractogram(track,dwi_img)
+tg = load_tractogram(track,dwi_img,bbox_valid_check=False)
+#tg_acpc = transform_streamlines(tg.streamlines,dwi_img.get_affine())
 
 # download and load waypoint ROIs and make bundle dictionary
 bundles = api.make_bundle_dict(resample_to=MNI_T2_img)
@@ -50,7 +53,7 @@ segmentation.segment(bundles,tg,fdata=dwi,fbval=bvals,fbvec=bvecs,mapping=mappin
 print(f"Space after segmentation: {tg.space}")
 
 # re-load tractogram in RASMM space since it was warped to the VOX space during segmentation
-tg = load_tractogram(track,dwi_img)
+tg = load_tractogram(track,dwi_img,bbox_valid_check=False)
 
 # generate classification structure and tracts.json
 names = np.array(bundle_names,dtype=object)
