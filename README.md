@@ -14,7 +14,7 @@ Specifically, this app will register the DWI and streamlines to MNI space and ex
 ### Contributors
 
 - Soichi Hayashi (hayashis@iu.edu
-- Franco Pestilli (franpest@iu.edu)
+- Franco Pestilli ([@francopestilli](https://github.com/francopestilli))
 
 ### Funding
 
