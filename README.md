@@ -3,6 +3,32 @@
 
 # AFQ Segmentation: pyAFQ
 
+<!-- brainlife-app:begin (generated from the App manifest; edit the manifest, not this block) -->
+
+**Segments a whole-brain tractogram into the 20 AFQ major white matter tracts with pyAFQ 0.4.1, registering DWI to MNI and using Mori-atlas waypoint ROIs, and outputs a white matter classification.**
+
+Registers the DWI b0 to the MNI152NLin2009cAsym T2w template (optionally affine first, then SyN), builds the AFQ bundle dictionary of waypoint ROIs, and runs pyAFQ segmentation on the tractogram. Outputs a classification structure with the names and streamline indices of the AFQ tracts, plus FreeSurfer surfaces for visualisation. DWI and tractogram must be in the same space.
+
+Run it on brainlife.io: [https://doi.org/10.25663/brainlife.app.295](https://doi.org/10.25663/brainlife.app.295)
+
+| Input | Datatype | Required | Description |
+|---|---|---|---|
+| `freesurfer` | `neuro/freesurfer` | yes | The path to the top directory of the Freesurfer datatype. This is used for the visualization. |
+| `track` | `neuro/track/tck` | yes | The path to the whole-brain tractogram to be segmented. |
+| `dwi` | `neuro/dwi` | yes | The path to the DWI datatype used to generate the whole-brain tractogram. |
+
+| Output | Datatype | Description |
+|---|---|---|
+| `wmc` | `neuro/wmc` | The AFQ classification structure including a classification.mat structure that contains the streamline indices in the whole-brain tractogram. |
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `affine` | boolean | `false` | If true, will first align the DWI to the MNI template using an affine registration before computing the non-linear warp. However, if this has already been done, the non-linear warp should work just fine and this can be set to false |
+
+Runtime: container `brainlife/freesurfer-mini:6.0.1`; 8 CPUs; 60 GB memory; 10 h walltime; needs `FREESURFER_LICENSE`.
+
+<!-- brainlife-app:end -->
+
 This app will segment a whole-brain tractogram into the 20 whole-brain tracks provided by Automatic Fiber Quantification (AFQ). This app takes a dwi, track/tck, and freesurfer inputs and outputs a white-matter classification (WMC) structure containing the names and streamlines indices of the AFQ tracks.
 
 Specifically, this app will register the DWI and streamlines to MNI space and extract tracks using regions of interest derived from the Mori atlas. This app uses the recently developed Python port from the Yeatman lab (https://github.com/yeatmanlab/pyAFQ)
